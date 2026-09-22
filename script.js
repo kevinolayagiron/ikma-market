@@ -10,9 +10,11 @@ const fallbackProducts=window.products||[];
 async function loadProducts(){
   try{
     const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-    const {data,error}=await client.from("products").select("*").eq("active",true);
+    const {data,error}=await client.from("products").select("id,title,description,price,currency,category,image_url,link,badge,active").eq("active",true);
     if(error) throw error;
-    products=(data||[]).map(p=>({title:p.title,description:p.description,price:p.price,currency:p.currency||"PEN",category:p.category,image:p.image_url,link:p.link,badge:p.badge}));
+    // Si Supabase responde vacío, conservamos el catálogo local como respaldo.
+    if(!data || data.length===0){ products=fallbackProducts.map(p=>({...p,currency:p.currency||"PEN"})); }
+    else products=(data||[]).map(p=>({title:p.title,description:p.description,price:p.price,currency:p.currency||"PEN",category:p.category,image:p.image_url,link:p.link,badge:p.badge}));
   }catch(e){
     products=fallbackProducts;
     console.warn("No se pudo cargar Supabase; usando productos locales.",e);

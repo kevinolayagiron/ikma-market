@@ -38,3 +38,5 @@ function render(){
 }
 function escapeHtml(value){return String(value??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]))}
 function escapeAttr(value){return escapeHtml(value)}
+
+loadProducts();

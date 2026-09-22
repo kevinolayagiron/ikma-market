@@ -5,18 +5,19 @@
 <title>IKMA Market | Administración</title>
 <link rel="stylesheet" href="styles.css">
 <style>
-body{background:#f7f8fc}.admin-wrap{width:min(1050px,92%);margin:40px auto 70px}.admin-card{background:#fff;border:1px solid #e8eaf0;border-radius:20px;padding:24px;box-shadow:0 8px 25px rgba(16,24,40,.05);margin-bottom:20px}.admin-top{display:flex;justify-content:space-between;align-items:center;gap:15px}.admin-top h1{margin:0}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label{font-weight:800;font-size:14px}.field input,.field textarea,.field select{padding:12px;border:1px solid #dfe2ea;border-radius:10px;font:inherit}.field textarea{min-height:90px;resize:vertical}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.btn2{border:0;border-radius:10px;padding:11px 16px;font-weight:800;cursor:pointer}.primary{background:#111827;color:#fff}.secondary{background:#eef2ff}.danger{background:#fee2e2;color:#991b1b}.status{margin:10px 0;font-weight:700}.product-row{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:15px 0;border-top:1px solid #eee}.product-row:first-child{border-top:0}.row-info{display:flex;align-items:center;gap:14px}.thumb{width:65px;height:55px;border-radius:9px;object-fit:cover;background:#111827}.muted{color:#697181;font-size:13px}@media(max-width:650px){.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.product-row{align-items:flex-start;flex-direction:column}}
+body{background:#f7f8fc}.admin-wrap{width:min(1050px,92%);margin:40px auto 70px}.admin-card{background:#fff;border:1px solid #e8eaf0;border-radius:20px;padding:24px;box-shadow:0 8px 25px rgba(16,24,40,.05);margin-bottom:20px}.admin-top{display:flex;justify-content:space-between;align-items:center;gap:15px}.admin-top h1{margin:0}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label{font-weight:800;font-size:14px}.field input,.field textarea,.field select{padding:12px;border:1px solid #dfe2ea;border-radius:10px;font:inherit}.field textarea{min-height:90px;resize:vertical}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.btn2{border:0;border-radius:10px;padding:11px 16px;font-weight:800;cursor:pointer}.primary{background:#111827;color:#fff}.secondary{background:#eef2ff}.danger{background:#fee2e2;color:#991b1b}.status{margin:10px 0;font-weight:700}.product-row{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:15px 0;border-top:1px solid #eee}.product-row:first-child{border-top:0}.row-info{display:flex;align-items:center;gap:14px}.thumb{width:65px;height:55px;border-radius:9px;object-fit:cover;background:#111827}.muted{color:#697181;font-size:13px}.error-box{background:#fff1f2;color:#9f1239;border:1px solid #fecdd3;border-radius:10px;padding:12px;margin-top:12px}@media(max-width:650px){.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.product-row{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
 <header class="site-header"><div class="container nav"><a class="brand" href="index.html"><span class="brand-mark">I</span><span>IKMA <b>MARKET</b></span></a><a class="nav-link" href="index.html">Ver tienda</a></div></header>
 <main class="admin-wrap">
-<div class="admin-card"><div class="admin-top"><div><span class="eyebrow">PANEL PRIVADO</span><h1>Administrar productos</h1><p class="muted">Añade, edita o elimina productos de IKMA Market.</p></div><button id="logout" class="btn2 secondary">Cerrar sesión</button></div></div>
+<div class="admin-card"><div class="admin-top"><div><span class="eyebrow">PANEL PRIVADO</span><h1>Administrar productos</h1><p class="muted">Añade, edita o elimina productos de IKMA Market.</p></div><button id="logout" type="button" class="btn2 secondary" hidden>Cerrar sesión</button></div></div>
+<div id="systemError" class="error-box" hidden></div>
 <div id="loginCard" class="admin-card">
 <h2>Iniciar sesión</h2><form id="loginForm"><div class="form-grid">
-<div class="field"><label>Correo</label><input id="email" type="email" required></div>
-<div class="field"><label>Contraseña</label><input id="password" type="password" required></div>
-</div><div class="actions"><button class="btn2 primary">Entrar</button></div><p id="loginStatus" class="status"></p></form>
+<div class="field"><label>Correo</label><input id="email" type="email" autocomplete="email" required></div>
+<div class="field"><label>Contraseña</label><input id="password" type="password" autocomplete="current-password" required></div>
+</div><div class="actions"><button type="submit" class="btn2 primary">Entrar</button></div><p id="loginStatus" class="status"></p></form>
 </div>
 <div id="app" hidden>
 <div class="admin-card"><h2 id="formTitle">Añadir producto</h2>
@@ -30,11 +31,11 @@ body{background:#f7f8fc}.admin-wrap{width:min(1050px,92%);margin:40px auto 70px}
 <div class="field full"><label>URL de imagen</label><input id="image_url" type="url" placeholder="https://..."></div>
 <div class="field full"><label>Enlace del producto / Hotmart *</label><input id="link" type="url" placeholder="https://..." required></div>
 <div class="field"><label>Visible en la tienda</label><select id="active"><option value="true">Sí</option><option value="false">No</option></select></div>
-</div><div class="actions"><button class="btn2 primary" id="saveBtn">Guardar producto</button><button type="button" class="btn2 secondary" id="cancelBtn" hidden>Cancelar edición</button></div><p id="formStatus" class="status"></p></form></div>
+</div><div class="actions"><button type="submit" class="btn2 primary" id="saveBtn">Guardar producto</button><button type="button" class="btn2 secondary" id="cancelBtn" hidden>Cancelar edición</button></div><p id="formStatus" class="status"></p></form></div>
 <div class="admin-card"><h2>Mis productos</h2><div id="productList"></div></div>
 </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
-<script src="admin.js"></script>
+<script src="supabase-config.js?v=2"></script>
+<script src="admin.js?v=3"></script>
 </body></html>

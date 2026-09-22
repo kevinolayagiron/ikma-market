@@ -34,9 +34,10 @@ function render(){
     return matchesCategory&&text.includes(term);
   });
   empty.classList.toggle("hidden",filtered.length>0);
-  grid.innerHTML=filtered.map(p=>"<article class=\"product\"><div class=\"product-img\">"+(p.image?"<img src=\""+escapeAttr(p.image)+"\" alt=\""+escapeAttr(p.title)+"\" loading=\"lazy\">":"<span>IKMA</span>")+"</div><div class=\"product-body\"><span class=\"badge\">"+escapeHtml(p.badge||p.category||"PRODUCTO")+"</span><h3>"+escapeHtml(p.title)+"</h3><p>"+escapeHtml(p.description||"")+"</p><div class=\"product-bottom\"><span class=\"price\">"+escapeHtml(p.price||"Consultar")+"</span><a class=\"buy\" href=\""+escapeAttr(p.link||"#")+" \" target=\"_blank\" rel=\"noopener noreferrer\">Ver producto</a></div></div></article>").join("");
+  grid.innerHTML=filtered.map(p=>"<article class=\"product\"><div class=\"product-img\">"+(p.image?"<img src=\""+escapeAttr(p.image)+"\" alt=\""+escapeAttr(p.title)+"\" loading=\"lazy\">":"<span>IKMA</span>")+"</div><div class=\"product-body\"><span class=\"badge\">"+escapeHtml(p.badge||p.category||"PRODUCTO")+"</span><h3>"+escapeHtml(p.title)+"</h3><p>"+escapeHtml(p.description||"")+"</p><div class=\"product-bottom\"><span class=\"price\">"+escapeHtml(formatPrice(p.price,p.currency))+"</span><a class=\"buy\" href=\""+escapeAttr(p.link||"#")+" \" target=\"_blank\" rel=\"noopener noreferrer\">Ver producto</a></div></div></article>").join("");
 }
-function formatPrice(price,currency){if(price===null||price===undefined||price==="")return "Consultar";return (currency==="USD"?"US$":"S/")+" "+Number(price).toFixed(2);}\nfunction escapeHtml(value){return String(value??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]))}
+function formatPrice(price,currency){if(price===null||price===undefined||price==="")return "Consultar";return (currency==="USD"?"US$":"S/")+" "+Number(price).toFixed(2);}
+function escapeHtml(value){return String(value??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]))}
 function escapeAttr(value){return escapeHtml(value)}
 
 loadProducts();

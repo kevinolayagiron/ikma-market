@@ -30,7 +30,8 @@ async function saveProduct(e) {
   const payload = {
     title: $("title").value.trim(),
     description: $("description").value.trim(),
-    price: $("price").value.trim() || null,\n    currency: $("currency").value,
+    price: $("price").value.trim() || null,
+    currency: $("currency").value,
     category: $("category").value.trim(),
     image_url: $("image_url").value.trim(),
     link: $("link").value.trim(),
@@ -72,7 +73,8 @@ window.editProduct = id => {
   $("formTitle").textContent = "Editar producto";
   $("cancelBtn").hidden = false;
   ["title","description","price","category","image_url","link","badge"].forEach(k => $(k).value = p[k] ?? "");
-  $("active").value = String(p.active);\n  $("currency").value = p.currency || "PEN";
+  $("active").value = String(p.active);
+  $("currency").value = p.currency || "PEN";
   window.scrollTo({top:0,behavior:"smooth"});
 };
 window.deleteProduct = async id => {
@@ -89,5 +91,10 @@ function escapeHtml(value) {
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"
   }[char]));
 }
-function escapeAttr(value) { return escapeHtml(value); }\nfunction formatPrice(price, currency) {\n  if (price === null || price === undefined || price === "") return "Sin precio";\n  const symbol = currency === "USD" ? "US$" : "S/";\n  return symbol + " " + Number(price).toFixed(2);\n}
+function escapeAttr(value) { return escapeHtml(value); }
+function formatPrice(price, currency) {
+  if (price === null || price === undefined || price === "") return "Sin precio";
+  const symbol = currency === "USD" ? "US$" : "S/";
+  return symbol + " " + Number(price).toFixed(2);
+}
 boot();

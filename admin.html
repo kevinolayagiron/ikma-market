@@ -24,7 +24,7 @@ body{background:#f7f8fc}.admin-wrap{width:min(1050px,92%);margin:40px auto 70px}
 <form id="productForm"><input id="productId" type="hidden">
 <div class="form-grid">
 <div class="field"><label>Nombre del producto *</label><input id="title" required></div>
-<div class="field"><label>Precio</label><input id="price" placeholder="S/ 49.90"></div>
+<div class="field"><label>Precio</label><input id="price" type="number" min="0" step="0.01" placeholder="49.90"></div>\n<div class="field"><label>Moneda</label><select id="currency"><option value="PEN">S/ — Soles</option><option value="USD">US$ — Dólares</option></select></div>
 <div class="field"><label>Categoría</label><input id="category" placeholder="Hotmart"></div>
 <div class="field"><label>Etiqueta</label><input id="badge" placeholder="HOTMART"></div>
 <div class="field full"><label>Descripción</label><textarea id="description"></textarea></div>

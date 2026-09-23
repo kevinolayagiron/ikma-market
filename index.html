@@ -6,29 +6,5 @@
 <section id="productos" class="catalog container"><div class="section-head catalog-head"><div><span class="eyebrow">CATÁLOGO</span><h2>Todos nuestros productos</h2><p class="section-subtitle">Filtra por categoría o busca por nombre.</p></div><div class="search-wrap"><input id="search" class="search" type="search" placeholder="🔎 Buscar producto..." autocomplete="off"><button id="clearSearch" class="clear-search" type="button" aria-label="Limpiar búsqueda" hidden>×</button></div></div><div id="categories" class="filters"></div><div id="catalogStatus" class="catalog-status" hidden></div><div id="products" class="product-grid"></div><div id="empty" class="empty hidden">No encontramos productos con esa búsqueda.</div></section></main>
 <a class="whatsapp-float" href="https://wa.me/51983484372?text=Hola%20IKMA%20Market%2C%20quisiera%20informaci%C3%B3n%20sobre%20un%20producto." target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"><span>💬</span><b>¿Necesitas ayuda?</b></a><button id="backTop" class="back-top" type="button" aria-label="Volver arriba">↑</button>
 <footer><div class="container footer-inner"><div><strong>IKMA MARKET</strong><span>Productos propios y digitales.</span></div><span>© <span id="year"></span> Todos los derechos reservados.</span></div></footer>
-<script src="supabase-config.js?v=6"></script><script src="script.js?v=18"></script>
-<script>
-(function(){
-  const status=document.getElementById("catalogStatus"), grid=document.getElementById("products");
-  if(!status||!grid)return;
-  status.hidden=false;
-  status.className="catalog-status loading";
-  status.textContent="Conectando con el catálogo…";
-  const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
-  const money=(v,c)=>{const n=Number(v);return Number.isFinite(n)?new Intl.NumberFormat("es-PE",{style:"currency",currency:(c||"PEN").toUpperCase()}).format(n):esc(v)};
-  fetch("https://yorypkcwamybtbqrlnjw.supabase.co/rest/v1/products?select=*",{
-    headers:{apikey:"sb_publishable_1NDqVhjyH_g-09p7mXfrXw_QI0DaQMu",Authorization:"Bearer sb_publishable_1NDqVhjyH_g-09p7mXfrXw_QI0DaQMu",Accept:"application/json"}
-  }).then(async r=>{
-    const t=await r.text(); if(!r.ok) throw new Error("HTTP "+r.status+" "+t);
-    const rows=JSON.parse(t); const active=rows.filter(p=>p.active===true||p.active==="true"||p.active===1);
-    const list=active.length?active:rows;
-    if(!list.length){status.className="catalog-status warning";status.textContent="La tabla products está vacía.";return}
-    grid.innerHTML=list.map(p=>'<article class="product">'+(p.image_url?'<div class="product-media"><img src="'+esc(p.image_url)+'" alt="'+esc(p.title||"Producto")+'" loading="lazy"></div>':'<div class="product-media product-placeholder"><span>I</span></div>')+'<div class="product-body"><div class="product-top"><span class="product-category">'+esc(p.category||"General")+'</span>'+(p.badge?'<span class="badge">'+esc(p.badge)+'</span>':'')+'</div><h3>'+esc(p.title||"Producto")+'</h3><p>'+esc(p.description||"")+'</p><div class="product-bottom"><strong>'+money(p.price,p.currency)+'</strong>'+(p.link&&p.link!="#"?'<a class="btn btn-primary" href="'+esc(p.link)+'" target="_blank" rel="noopener noreferrer">Ver producto</a>':'')+'</div></div></article>').join("");
-    status.className="catalog-status success";
-    status.textContent="✓ "+list.length+" productos cargados correctamente.";
-  }).catch(e=>{
-    status.className="catalog-status error";
-    status.textContent="Error conectando al catálogo: "+e.message;
-  });
-})();
-</script></body></html>
+<script src="supabase-config.js?v=6"></script><script src="script.js?v=19"></script>
+</body></html>

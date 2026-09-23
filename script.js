@@ -1,76 +1,13 @@
-const grid=document.getElementById("products");
-const offers=document.getElementById("offers");
-const noOffers=document.getElementById("noOffers");
-const search=document.getElementById("search");
-const categories=document.getElementById("categories");
-const empty=document.getElementById("empty");
-document.getElementById("year").textContent=new Date().getFullYear();
-let activeCategory="Todos";
-let products=[];
-const fallbackProducts=window.products||[];
-
-async function loadProducts(){
-  try{
-    const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-    const {data,error}=await client.from("products").select("id,title,description,price,currency,category,image_url,link,badge,active").eq("active",true);
-    if(error) throw error;
-    products=(!data||!data.length)
-      ? fallbackProducts.map(p=>({...p,currency:p.currency||"PEN"}))
-      : data.map(p=>({title:p.title,description:p.description,price:p.price,currency:p.currency||"PEN",category:p.category,image:p.image_url,link:p.link,badge:p.badge}));
-  }catch(e){
-    products=fallbackProducts;
-    console.warn("No se pudo cargar Supabase; usando productos locales.",e);
-  }
-  buildCategories();
-  renderOffers();
-  render();
-}
-function buildCategories(){
-  const categoryList=["Todos",...new Set(products.map(p=>p.category).filter(Boolean))];
-  categories.innerHTML=categoryList.map(c=>"<button class=\"filter "+(c==="Todos"?"active":"")+"\" data-category=\""+escapeAttr(c)+"\">"+escapeHtml(c)+"</button>").join("");
-}
-categories.addEventListener("click",e=>{
-  const btn=e.target.closest(".filter"); if(!btn)return;
-  activeCategory=btn.dataset.category;
-  document.querySelectorAll(".filter").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active"); render();
-});
-search.addEventListener("input",render);
-
-function isOffer(p){
-  const value=((p.badge||"")+" "+(p.category||"")).toLowerCase();
-  return value.includes("oferta")||value.includes("promo")||value.includes("descuento");
-}
-function card(p){
-  const discount=getDiscount(p);
-  const oldPrice=discount&&p.price ? Number(p.price)/(1-discount/100) : null;
-  return "<article class=\"product"+(isOffer(p)?" offer-card":"")+"\"><div class=\"product-img\">"+(p.image?"<img src=\""+escapeAttr(p.image)+"\" alt=\""+escapeAttr(p.title)+"\" loading=\"lazy\">":"<span>IKMA</span>")+"</div><div class=\"product-body\"><span class=\"badge\">"+escapeHtml(p.badge||p.category||"PRODUCTO")+"</span><h3>"+escapeHtml(p.title)+"</h3><p>"+escapeHtml(p.description||"")+"</p><div class=\"product-bottom\"><div class=\"price-line\"><span class=\"price\">"+escapeHtml(formatPrice(p.price,p.currency))+"</span>"+(oldPrice?"<span class=\"old-price\">"+escapeHtml(formatPrice(oldPrice,p.currency))+"</span>":"")+(discount?"<span class=\"discount\">"+discount+"% OFF</span>":"")+"</div><a class=\"buy\" href=\""+escapeAttr(p.link||"#")+"\" target=\"_blank\" rel=\"noopener noreferrer\">🛒 Ver producto</a></div></div></article>";
-}
-function getDiscount(p){
-  const value=String(p.badge||"");
-  const match=value.match(/(\d{1,2})\s*%/);
-  return match ? Math.min(99,Math.max(1,Number(match[1]))) : null;
-}
-function renderOffers(){
-  const offerProducts=products.filter(isOffer).slice(0,3);
-  noOffers.classList.toggle("hidden",offerProducts.length>0);
-  offers.classList.toggle("hidden",offerProducts.length===0);
-  offers.innerHTML=offerProducts.map(card).join("");
-}
-function render(){
-  const term=search.value.trim().toLowerCase();
-  const filtered=products.filter(p=>{
-    const matchesCategory=activeCategory==="Todos"||p.category===activeCategory;
-    const text=[p.title,p.description,p.category,p.badge].join(" ").toLowerCase();
-    return matchesCategory&&text.includes(term);
-  });
-  empty.classList.toggle("hidden",filtered.length>0);
-  grid.innerHTML=filtered.map(card).join("");
-}
-function formatPrice(price,currency){
-  if(price===null||price===undefined||price==="")return "Consultar";
-  return (currency==="USD"?"US$":"S/")+" "+Number(price).toFixed(2);
-}
-function escapeHtml(value){return String(value??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]))}
-function escapeAttr(value){return escapeHtml(value)}
-loadProducts();
+const grid=document.getElementById("products"),offers=document.getElementById("offers"),noOffers=document.getElementById("noOffers"),search=document.getElementById("search"),categories=document.getElementById("categories"),empty=document.getElementById("empty"),clearSearch=document.getElementById("clearSearch"),backTop=document.getElementById("backTop");
+document.getElementById("year").textContent=new Date().getFullYear();let activeCategory="Todos",products=[],fallbackProducts=window.products||[];
+async function loadProducts(){try{const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const{data,error}=await client.from("products").select("id,title,description,price,currency,category,image_url,link,badge,active").eq("active",true).order("title");if(error)throw error;products=(!data||!data.length)?fallbackProducts.map(p=>({...p,currency:p.currency||"PEN"})):data.map(p=>({title:p.title,description:p.description,price:p.price,currency:p.currency||"PEN",category:p.category,image:p.image_url,link:p.link,badge:p.badge}))}catch(e){products=fallbackProducts.map(p=>({...p,currency:p.currency||"PEN"}));console.warn("No se pudo cargar Supabase; usando productos locales.",e)}buildCategories();renderOffers();render()}
+function buildCategories(){const list=["Todos",...new Set(products.map(p=>p.category).filter(Boolean))];categories.innerHTML=list.map(c=>'<button class="filter '+(c==="Todos"?"active":"")+'" data-category="'+escapeAttr(c)+'">'+escapeHtml(c)+"</button>").join("")}
+categories.addEventListener("click",e=>{const b=e.target.closest(".filter");if(!b)return;activeCategory=b.dataset.category;document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()});
+search.addEventListener("input",()=>{clearSearch.hidden=!search.value;render()});clearSearch.addEventListener("click",()=>{search.value="";clearSearch.hidden=true;search.focus();render()});window.addEventListener("scroll",()=>backTop.classList.toggle("visible",window.scrollY>500),{passive:true});backTop.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+function isOffer(p){const v=((p.badge||"")+" "+(p.category||"")).toLowerCase();return v.includes("oferta")||v.includes("promo")||v.includes("descuento")||v.includes("%")}
+function getDiscount(p){const m=String(p.badge||"").match(/(\d{1,2})\s*%/);return m?Math.min(99,Math.max(1,Number(m[1]))):null}
+function card(p){const d=getDiscount(p),old=d&&p.price?Number(p.price)/(1-d/100):null;return '<article class="product '+(isOffer(p)?"offer-card":"")+'"><div class="product-img">'+(p.image?'<img src="'+escapeAttr(p.image)+'" alt="'+escapeAttr(p.title)+'" loading="lazy">':'<span>IKMA</span>')+'</div><div class="product-body"><span class="badge">'+escapeHtml(p.badge||p.category||"PRODUCTO")+'</span><h3>'+escapeHtml(p.title)+'</h3><p>'+escapeHtml(p.description||"")+'</p><div class="product-bottom"><div class="price-line"><span class="price">'+escapeHtml(formatPrice(p.price,p.currency))+'</span>'+(old?'<span class="old-price">'+escapeHtml(formatPrice(old,p.currency))+'</span>':"")+(d?'<span class="discount">'+d+"% OFF</span>":"")+'</div><a class="buy" href="'+escapeAttr(p.link||"#")+'" target="_blank" rel="noopener noreferrer">🛒 Ver producto</a></div></div></article>"}
+function renderOffers(){const op=products.filter(isOffer).slice(0,3);noOffers.classList.toggle("hidden",op.length>0);offers.classList.toggle("hidden",op.length===0);offers.innerHTML=op.map(card).join("")}
+function render(){const term=search.value.trim().toLowerCase();const filtered=products.filter(p=>{const mc=activeCategory==="Todos"||p.category===activeCategory;const txt=[p.title,p.description,p.category,p.badge].join(" ").toLowerCase();return mc&&txt.includes(term)});empty.classList.toggle("hidden",filtered.length>0);grid.innerHTML=filtered.map(card).join("")}
+function formatPrice(price,currency){if(price===null||price===undefined||price==="")return"Consultar";return(currency==="USD"?"US$":"S/")+" "+Number(price).toFixed(2)}
+function escapeHtml(value){return String(value??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]))}function escapeAttr(value){return escapeHtml(value)}loadProducts();

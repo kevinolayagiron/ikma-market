@@ -20,6 +20,10 @@
     if(!data.length)return;
     grid.innerHTML=data.map(p=>'<article class="product"><div class="product-img">'+(p.image_url?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title||"Producto")+'" loading="lazy">':'<span>IKMA</span>')+'</div><div class="product-body"><span class="badge">'+esc(p.badge||p.category||"PRODUCTO")+'</span><h3>'+esc(p.title||"Producto")+'</h3><p>'+esc(p.description||"")+'</p><div class="product-bottom"><div class="price-line"><span class="price">'+money(p.price,p.currency)+'</span></div><a class="buy" href="'+esc(p.link||"#")+'" target="_blank" rel="noopener noreferrer">🛒 Ver producto</a></div></div></article>').join("");
     const st=document.getElementById("catalogStatus");if(st)st.hidden=true;
+    const search=document.getElementById("search"),clear=document.getElementById("clearSearch");
+    const renderSearch=()=>{const q=search.value.trim().toLowerCase();const filtered=data.filter(p=>[p.title,p.description,p.category,p.badge].join(" ").toLowerCase().includes(q));grid.innerHTML=filtered.map(p=>'<article class="product"><div class="product-img">'+(p.image_url?'<img src="'+esc(p.image_url)+'" alt="'+esc(p.title||"Producto")+'" loading="lazy">':'<span>IKMA</span>')+'</div><div class="product-body"><span class="badge">'+esc(p.badge||p.category||"PRODUCTO")+'</span><h3>'+esc(p.title||"Producto")+'</h3><p>'+esc(p.description||"")+'</p><div class="product-bottom"><div class="price-line"><span class="price">'+money(p.price,p.currency)+'</span></div><a class="buy" href="'+esc(p.link||"#")+'" target="_blank" rel="noopener noreferrer">🛒 Ver producto</a></div></div></article>').join("");};
+    search.addEventListener("input",renderSearch);
+    clear.addEventListener("click",()=>setTimeout(renderSearch,0));
   }).catch(e=>console.error("IKMA catálogo:",e));
 })();
 </script>

@@ -1,1 +1,21 @@
-# IKMA Market\n\nCatálogo web para productos propios y productos de Hotmart.\n\n## Agregar productos\n1. Abre **products.js**.\n2. Copia un bloque de producto.\n3. Cambia title, description, price, category, image, link y badge.\n4. Guarda con **Commit changes**.\n\nNo necesitas modificar index.html para agregar productos.\n\n## Publicar gratis con GitHub Pages\nEn el repositorio entra a **Settings → Pages** y selecciona **Deploy from a branch**, branch **main** y carpeta **/ (root)**. Guarda.\n\n## Archivos\n- index.html — estructura.\n- styles.css — diseño responsive.\n- products.js — catálogo editable.\n- script.js — búsqueda y filtros.
+# IKMA Market
+
+Catálogo web gratuito para productos propios y productos de Hotmart, publicado con GitHub Pages.
+
+Incluye diseño responsive, logo minimalista con I mayúscula sin punto, animaciones, buscador, filtros, ofertas automáticas, WhatsApp, panel privado para administrar productos, estadísticas básicas y vista previa de imágenes.
+
+## Administrar productos
+1. Abre admin.html desde la página.
+2. Inicia sesión con tu usuario de Supabase.
+3. Agrega, edita, oculta o elimina productos sin tocar el código.
+4. Usa una etiqueta como 50% OFF para mostrar automáticamente una oferta.
+5. Guarda y vuelve a la tienda.
+
+## Archivos principales
+- index.html — tienda.
+- styles.css — diseño, responsive y animaciones.
+- products.js — productos de respaldo.
+- script.js — búsqueda, filtros y ofertas.
+- admin.html — panel de administración.
+- admin.js — login y gestión de productos.
+- supabase-config.js — conexión pública de Supabase.

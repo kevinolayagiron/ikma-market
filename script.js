@@ -42,7 +42,14 @@ function isOffer(p){
   return value.includes("oferta")||value.includes("promo")||value.includes("descuento");
 }
 function card(p){
-  return "<article class=\"product"+(isOffer(p)?" offer-card":"")+"\"><div class=\"product-img\">"+(p.image?"<img src=\""+escapeAttr(p.image)+"\" alt=\""+escapeAttr(p.title)+"\" loading=\"lazy\">":"<span>IKMA</span>")+"</div><div class=\"product-body\"><span class=\"badge\">"+escapeHtml(p.badge||p.category||"PRODUCTO")+"</span><h3>"+escapeHtml(p.title)+"</h3><p>"+escapeHtml(p.description||"")+"</p><div class=\"product-bottom\"><span class=\"price\">"+escapeHtml(formatPrice(p.price,p.currency))+"</span><a class=\"buy\" href=\""+escapeAttr(p.link||"#")+" \" target=\"_blank\" rel=\"noopener noreferrer\">Ver producto</a></div></div></article>";
+  const discount=getDiscount(p);
+  const oldPrice=discount&&p.price ? Number(p.price)/(1-discount/100) : null;
+  return "<article class=\"product"+(isOffer(p)?" offer-card":"")+"\"><div class=\"product-img\">"+(p.image?"<img src=\""+escapeAttr(p.image)+"\" alt=\""+escapeAttr(p.title)+"\" loading=\"lazy\">":"<span>IKMA</span>")+"</div><div class=\"product-body\"><span class=\"badge\">"+escapeHtml(p.badge||p.category||"PRODUCTO")+"</span><h3>"+escapeHtml(p.title)+"</h3><p>"+escapeHtml(p.description||"")+"</p><div class=\"product-bottom\"><div class=\"price-line\"><span class=\"price\">"+escapeHtml(formatPrice(p.price,p.currency))+"</span>"+(oldPrice?"<span class=\"old-price\">"+escapeHtml(formatPrice(oldPrice,p.currency))+"</span>":"")+(discount?"<span class=\"discount\">"+discount+"% OFF</span>":"")+"</div><a class=\"buy\" href=\""+escapeAttr(p.link||"#")+"\" target=\"_blank\" rel=\"noopener noreferrer\">🛒 Ver producto</a></div></div></article>";
+}
+function getDiscount(p){
+  const value=String(p.badge||"");
+  const match=value.match(/(\d{1,2})\s*%/);
+  return match ? Math.min(99,Math.max(1,Number(match[1]))) : null;
 }
 function renderOffers(){
   const offerProducts=products.filter(isOffer).slice(0,3);

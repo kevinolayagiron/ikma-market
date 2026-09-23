@@ -1,4 +1,4 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="IKMA Market - productos digitales, productos propios y ofertas."><meta name="theme-color" content="#111827"><title>IKMA Market | Productos y ofertas</title><link rel="stylesheet" href="styles.css?v=14"></head><body>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="IKMA Market - productos digitales, productos propios y ofertas."><meta name="theme-color" content="#111827"><title>IKMA Market | Productos y ofertas</title><link rel="stylesheet" href="styles.css?v=15"></head><body>
 <header class="site-header"><div class="container nav"><a class="brand" href="#" aria-label="IKMA Market inicio"><span class="brand-mark">I</span><span>IKMA <b>MARKET</b></span></a><nav class="nav-actions"><a class="nav-link" href="#productos">Productos</a><a class="nav-link admin-link" href="admin.html">Administrar</a></nav></div></header>
 <main><section class="hero"><div class="container hero-grid"><div class="hero-copy reveal"><span class="eyebrow">BIENVENIDO A IKMA MARKET</span><h1>Encuentra productos digitales y <span>ofertas</span> en un solo lugar.</h1><p>Explora nuestro catálogo, descubre oportunidades y accede directamente a tus productos favoritos.</p><div class="hero-actions"><a class="btn btn-primary" href="#productos">Ver productos</a><a class="btn btn-ghost" href="#ofertas">Ver ofertas</a></div><div class="hero-points"><span>✓ Catálogo actualizado</span><span>✓ Compra segura en la plataforma del producto</span></div></div><div class="hero-card reveal delay-1"><div class="hero-orb"><span>I</span></div><p>IKMA MARKET</p><strong>Simple · Moderno · Fácil de editar</strong><div class="orb-ring ring-1"></div><div class="orb-ring ring-2"></div></div></div></section>
 <section id="ofertas" class="catalog container offers-section"><div class="section-head"><div><span class="eyebrow">🔥 OFERTAS</span><h2>Ofertas destacadas</h2><p class="section-subtitle">Productos que no querrás dejar pasar.</p></div></div><div id="offers" class="product-grid"></div><div id="noOffers" class="empty hidden">Pronto tendremos nuevas ofertas.</div></section>
@@ -7,28 +7,4 @@
 <a class="whatsapp-float" href="https://wa.me/51983484372?text=Hola%20IKMA%20Market%2C%20quisiera%20informaci%C3%B3n%20sobre%20un%20producto." target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"><span>💬</span><b>¿Necesitas ayuda?</b></a><button id="backTop" class="back-top" type="button" aria-label="Volver arriba">↑</button>
 <footer><div class="container footer-inner"><div><strong>IKMA MARKET</strong><span>Productos propios y digitales.</span></div><span>© <span id="year"></span> Todos los derechos reservados.</span></div></footer>
 <script src="supabase-config.js?v=6"></script><script src="script.js?v=18"></script>
-<script>
-(function(){
-  const status=document.getElementById("catalogStatus"), grid=document.getElementById("products");
-  if(!status||!grid)return;
-  status.hidden=false;
-  status.className="catalog-status loading";
-  status.textContent="Conectando con el catálogo…";
-  const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
-  const money=(v,c)=>{const n=Number(v);return Number.isFinite(n)?new Intl.NumberFormat("es-PE",{style:"currency",currency:(c||"PEN").toUpperCase()}).format(n):esc(v)};
-  fetch("https://yorypkcwamybtbqrlnjw.supabase.co/rest/v1/products?select=*",{
-    headers:{apikey:"sb_publishable_1NDqVhjyH_g-09p7mXfrXw_QI0DaQMu",Authorization:"Bearer sb_publishable_1NDqVhjyH_g-09p7mXfrXw_QI0DaQMu",Accept:"application/json"}
-  }).then(async r=>{
-    const t=await r.text(); if(!r.ok) throw new Error("HTTP "+r.status+" "+t);
-    const rows=JSON.parse(t); const active=rows.filter(p=>p.active===true||p.active==="true"||p.active===1);
-    const list=active.length?active:rows;
-    if(!list.length){status.className="catalog-status warning";status.textContent="La tabla products está vacía.";return}
-    grid.innerHTML=list.map(p=>'<article class="product">'+(p.image_url?'<div class="product-media"><img src="'+esc(p.image_url)+'" alt="'+esc(p.title||"Producto")+'" loading="lazy"></div>':'<div class="product-media product-placeholder"><span>I</span></div>')+'<div class="product-body"><div class="product-top"><span class="product-category">'+esc(p.category||"General")+'</span>'+(p.badge?'<span class="badge">'+esc(p.badge)+'</span>':'')+'</div><h3>'+esc(p.title||"Producto")+'</h3><p>'+esc(p.description||"")+'</p><div class="product-bottom"><strong>'+money(p.price,p.currency)+'</strong>'+(p.link&&p.link!="#"?'<a class="btn btn-primary" href="'+esc(p.link)+'" target="_blank" rel="noopener noreferrer">Ver producto</a>':'')+'</div></div></article>').join("");
-    status.className="catalog-status success";
-    status.textContent="✓ "+list.length+" productos cargados correctamente.";
-  }).catch(e=>{
-    status.className="catalog-status error";
-    status.textContent="Error conectando al catálogo: "+e.message;
-  });
-})();
-</script></body></html>
+<script src="supabase-config.js?v=6"></script><script src="script.js?v=19"></script>l>
